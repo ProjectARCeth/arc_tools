@@ -1,8 +1,8 @@
 #ifndef KALMAN_FILTER_ARC_HEADER_HPP
 #define KALMAN_FILTER_ARC_HEADER_HPP
 
-#include "arc_header/coordinate_transform.hpp"
-#include "arc_header/timing.hpp"
+#include "arc_tools/coordinate_transform.hpp"
+#include "arc_tools/timing.hpp"
 
 #include "ros/ros.h"
 #include "Eigen/Dense"
@@ -35,15 +35,15 @@ public:
   int dimension_;
   bool initialized_;
   double timestep_;
-  Clock time;
+  Clock time_;
 };
 
 class KalmanFilterOrientation : private KalmanFilter{
 public:
   void initWithErrors(const Eigen::VectorXd& x0,
-                      const double errorStateEulerDot, const double errorStateLinearAcceleration,
-                      const double errorMeasurementGyro, const double errorMeasurementLinearAccelerometer);
-  bool update(const sensor_msgs::Imu::ConstPtr& imuData);
+                      const double error_state_euler_dot, const double error_state_linear_acceleration,
+                      const double error_measurement_gyro, const double error_measurement_linear_accelerometer);
+  bool update(const sensor_msgs::Imu::ConstPtr& imu_data);
   geometry_msgs::Quaternion getOrientation();
   geometry_msgs::Vector3 getAngles();
   geometry_msgs::Point getPoint();
@@ -53,7 +53,7 @@ private:
   static const double gravityConstant =  9.80665;   
   void updateMatrices();   
   Eigen::Matrix<double,3,1> angles_;
-  Eigen::Matrix<double,6,1> currentMeasurements_;
+  Eigen::Matrix<double,6,1> current_measurements_;
   geometry_msgs::Pose pose_;
 };
 

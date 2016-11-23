@@ -1,4 +1,4 @@
-#include "arc_header/kalman_filter.hpp"
+#include "arc_tools/kalman_filter.hpp"
 
 KalmanFilter::KalmanFilter(){
 
@@ -16,7 +16,7 @@ void KalmanFilter::init(const Eigen::VectorXd& x0){
   I_ = Eigen::MatrixXd::Identity(A_.rows(), A_.cols());
   initialized_ = true;
   //Initialising Time.
-  time.start();
+  time_.start();
 }
 
 void KalmanFilter::init(const Eigen::VectorXd& x0,
@@ -84,7 +84,7 @@ void KalmanFilterOrientation::updateMatrices(){
 
 bool KalmanFilterOrientation::update(const sensor_msgs::Imu::ConstPtr & imu_data){
   //Time Interval.
-  timestep_ = time.getTimestep();
+  timestep_ = time_.getTimestep();
   ROS_INFO("timestep: %f", timestep_);                       //Time Interval CHECKED.
   //Update matrices.
   updateMatrices();
