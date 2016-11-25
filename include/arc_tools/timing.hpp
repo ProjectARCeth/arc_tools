@@ -1,6 +1,8 @@
 #ifndef TIMING_ARC_HEADER_HPP
 #define TIMING_ARC_HEADER_HPP
 
+namspace arc_tools {
+
 class Clock {
 
  public:
@@ -36,5 +38,6 @@ class Clock {
   static const double kSecondsToMiliseconds = 1000.0;
   static const double kMicrosecondsToMiliseconds = 0.001;
 };
+} //namespace arc_tools
 
 #endif

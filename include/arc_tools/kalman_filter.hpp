@@ -7,12 +7,15 @@
 #include "ros/ros.h"
 #include "Eigen/Dense"
 #include <time.h>
+#include <cmath>
 
 #include "sensor_msgs/Imu.h"
 #include "geometry_msgs/Point.h"
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/Quaternion.h"
 #include "geometry_msgs/Vector3.h"
+
+namespace arc_tools{
 
 class KalmanFilter {
 public:
@@ -54,7 +57,9 @@ private:
   void updateMatrices();   
   Eigen::Matrix<double,3,1> angles_;
   Eigen::Matrix<double,6,1> current_measurements_;
+  Eigen::Matrix<double,3,3> H_block_;
   geometry_msgs::Pose pose_;
 };
+} //namespace arc_tools.
 
 #endif

@@ -2,7 +2,7 @@
 <package>
  	<name>arc_tools</name>
  	<version>0.0.0</version>
-  	<description>The arc_header package</description>
+  	<description>The arc_tools package</description>
 
   	<maintainer email="sele@todo.todo">sele</maintainer>
   	<license>TODO</license>
@@ -13,6 +13,7 @@
   	<build_depend>std_msgs</build_depend>
 	<build_depend>geometry_msgs</build_depend>
 	<build_depend>sensor_msgs</build_depend>
+	<build_depend>nav_msgs</build_depend>
 	<build_depend>message_generation</build_depend>
 	<build_depend>catkin_simple</build_depend>
 	<build_depend>eigen_catkin</build_depend>

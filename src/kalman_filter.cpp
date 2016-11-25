@@ -59,7 +59,6 @@ void KalmanFilterOrientation::initWithErrors(const Eigen::VectorXd& x0,
   A_.block<3,3>(12,12) = Eigen::MatrixXd::Zero(3,3);
   B_ = Eigen::MatrixXd::Zero(15,15);
   H_ = Eigen::MatrixXd::Zero(6,15);
-  H_.block<3,3>(2,9) = Eigen::MatrixXd::Identity(3,3);
   //Initialising error matrices.
   Q_ = Eigen::MatrixXd::Identity(15,15);
   Q_.block<3,3>(9,9) = Eigen::MatrixXd::Identity(3,3) * error_state_euler_dot;
@@ -78,6 +77,10 @@ void KalmanFilterOrientation::updateMatrices(){
   //Updating matrix H
   angles_.segment<3>(0) = x_.segment<3>(3);
   H_.block<3,3>(0,12) = getRotationMatrix(angles_);
+  H_block_(0,0) = 1.0; H_block_(0,2) = -sin(x_(4));
+  H_block_(1,1) = cos(x_(3)); H_block_(1,2) = sin(x_(3)) * cos(x_(4));
+  H_block_(2,1) = -sin(x_(3)); H_block_(2,2) = cos(x_(3)) * cos(x_(4));
+  H_.block<3,3>(2,9) = H_block_;
   //ROS_INFO("A(0,6): %f", A_(0, 6));               //Matrix A and C CHECKED.
   //ROS_INFO("%f and %f", H_(0, 12), H_(1,12));     //Rotational matrix CHECKED.
 } 
@@ -85,7 +88,7 @@ void KalmanFilterOrientation::updateMatrices(){
 bool KalmanFilterOrientation::update(const sensor_msgs::Imu::ConstPtr & imu_data){
   //Time Interval.
   timestep_ = time_.getTimestep();
-  ROS_INFO("timestep: %f", timestep_);                       //Time Interval CHECKED.
+  //ROS_INFO("timestep: %f", timestep_);                       //Time Interval CHECKED.
   //Update matrices.
   updateMatrices();
   //Getting imu-measurements.
