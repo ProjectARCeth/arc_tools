@@ -11,7 +11,7 @@ int main(int argc, char** argv){
 	Eigen::Vector3d euler;
 	euler << roll, pitch, yaw;
 	//Trafo Matrix.
-	Eigen::Matrix3d Trafo = arc_tools::getRotationMatrix(euler);
+	Eigen::Matrix3d Trafo = getRotationMatrix(euler);
 	//Cartesian Coords global.
 	double x_global = 1.0;
 	double y_global = 0.0;

@@ -1,7 +1,5 @@
 #include "arc_tools/coordinate_transform.hpp"
 
-namespace arc_tools {
-
 geometry_msgs::Quaternion transformQuaternionEuler(const Eigen::Vector3d euler){
 
   geometry_msgs::Quaternion quat;
@@ -59,4 +57,3 @@ Eigen::Matrix3d getRotationMatrix(const Eigen::Vector3d angles){
 
   return rotation_matrix;
 }
-} //namespace arc_tools.

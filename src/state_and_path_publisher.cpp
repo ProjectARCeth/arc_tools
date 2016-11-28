@@ -1,7 +1,5 @@
 #include "arc_tools/state_and_path_publisher.hpp"
 
-namespace arc_tools {
-  
 StateAndPathPublisher::StateAndPathPublisher(){
   //Initialising path_array.
   array_position_ = 0;
@@ -49,4 +47,4 @@ nav_msgs::Path StateAndPathPublisher::updatePath(){
   for (int i = 0; i < vector_length; i++){ path.poses[i] = path_vector_[i]; }
   return path; 
 }
-} //namespace arc_tools.
+

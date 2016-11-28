@@ -13,8 +13,6 @@
 #include "geometry_msgs/TwistStamped.h"
 #include "nav_msgs/Path.h"
 
-namespace arc_tools {
-
 class StateAndPathPublisher {
 public:
 	StateAndPathPublisher();
@@ -35,6 +33,5 @@ private:
 	std::vector<geometry_msgs::PoseStamped> path_vector_;
 	nav_msgs::Path path_;
 };
-} //namespace arc_tools
 
 #endif

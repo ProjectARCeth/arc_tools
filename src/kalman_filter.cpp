@@ -17,7 +17,7 @@ void KalmanFilter::init(const Eigen::VectorXd& x0){
   initialized_ = true;
   //Initialising Time.
   time_.start();
-}
+}3
 
 void KalmanFilter::init(const Eigen::VectorXd& x0,
                         const Eigen::MatrixXd& A,
@@ -44,10 +44,6 @@ bool KalmanFilter::kalmanCore(const Eigen::VectorXd& z){
   x_ = xbar_ + K_ * (z - H_ * xbar_);
   P_ = (I_ - K_ * H_) * Pbar_;
   return true;
-}
-
-Eigen::VectorXd KalmanFilter::state(){
-  return x_;
 }
 
 void KalmanFilterOrientation::initWithErrors(const Eigen::VectorXd& x0,
@@ -133,3 +129,6 @@ geometry_msgs::Pose KalmanFilterOrientation::getPose(){
   return pose_;
 }
 
+Eigen::VectorXd KalmanFilterOrientation::getState(){
+  return x_;
+}

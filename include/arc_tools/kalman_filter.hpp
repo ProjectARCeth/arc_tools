@@ -15,8 +15,6 @@
 #include "geometry_msgs/Quaternion.h"
 #include "geometry_msgs/Vector3.h"
 
-namespace arc_tools{
-
 class KalmanFilter {
 public:
   KalmanFilter();
@@ -28,7 +26,6 @@ public:
             const Eigen::MatrixXd& R);
   void init(const Eigen::VectorXd& x0);
   bool kalmanCore(const Eigen::VectorXd& z); 
-  Eigen::VectorXd state();
   //System dynamics A, Input B, observation H, process noise Q, measurement noise R. 
   Eigen::MatrixXd A_, B_, H_, R_, Q_, I_;
   //Covariance P, Kalman Gain K.     
@@ -51,6 +48,7 @@ public:
   geometry_msgs::Vector3 getAngles();
   geometry_msgs::Point getPoint();
   geometry_msgs::Pose getPose();
+  Eigen::VectorXd getState();
 
 private:
   static const double gravityConstant =  9.80665;   
@@ -60,6 +58,5 @@ private:
   Eigen::Matrix<double,3,3> H_block_;
   geometry_msgs::Pose pose_;
 };
-} //namespace arc_tools.
 
 #endif
