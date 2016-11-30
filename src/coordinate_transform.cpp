@@ -51,9 +51,14 @@ Eigen::Matrix3d getRotationMatrix(const Eigen::Vector3d angles){
   double psi = angles(2);
 
   Eigen::Matrix3d rotation_matrix;
-  rotation_matrix << cos(-theta)*cos(psi), cos(-theta)*sin(psi), sin(theta),
-            sin(phi)*sin(-theta)*cos(phi) - cos(phi)*sin(psi), sin(phi)*sin(-theta)*sin(psi) + cos(phi)*cos(psi), sin(phi)*cos(-theta), 
-            cos(phi)*sin(theta)*cos(psi) + sin(phi)*sin(psi), cos(phi)*sin(-theta)*sin(psi) - sin(phi)*cos(psi), cos(phi)*cos(theta);
-
+  rotation_matrix(0,0) = cos(theta)*cos(psi);
+  rotation_matrix(0,1) = -cos(theta)*sin(psi); 
+  rotation_matrix(0,2) = sin(theta); 
+  rotation_matrix(1,0) = sin(phi)*sin(theta)*cos(psi) + cos(phi)*sin(psi);
+  rotation_matrix(1,1) = -sin(phi)*sin(theta)*sin(psi) + cos(phi)*cos(psi); 
+  rotation_matrix(1,2) = -sin(phi)*cos(theta); 
+  rotation_matrix(2,0) = -cos(phi)*sin(theta)*cos(psi) + sin(phi)*sin(psi);
+  rotation_matrix(2,1) = cos(phi)*sin(theta)*sin(psi) + sin(phi)*cos(psi); 
+  rotation_matrix(2,2) = cos(phi)*cos(theta); 
   return rotation_matrix;
 }

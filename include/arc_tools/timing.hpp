@@ -13,7 +13,7 @@ class Clock {
   	current_time_ = getTime();
   	time_step_ = current_time_ - last_time_;
   	last_time_ = getTime();
-  	return time_step_*0.001;
+  	return time_step_ * kMilisecondsToSeconds;
   }
   void start(){ gettimeofday(&real_time_start_, NULL); }
  private:
@@ -35,6 +35,7 @@ class Clock {
   double last_time_, current_time_, time_step_;
   static const double kSecondsToMiliseconds = 1000.0;
   static const double kMicrosecondsToMiliseconds = 0.001;
+  static const double kMilisecondsToSeconds = 0.001;
 };
 
 #endif

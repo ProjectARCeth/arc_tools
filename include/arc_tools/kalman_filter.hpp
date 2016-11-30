@@ -25,7 +25,7 @@ public:
             const Eigen::MatrixXd& Q,
             const Eigen::MatrixXd& R);
   void init(const Eigen::VectorXd& x0);
-  bool kalmanCore(const Eigen::VectorXd& z); 
+  void kalmanCore(const Eigen::VectorXd& z); 
   //System dynamics A, Input B, observation H, process noise Q, measurement noise R. 
   Eigen::MatrixXd A_, B_, H_, R_, Q_, I_;
   //Covariance P, Kalman Gain K.     
@@ -51,11 +51,11 @@ public:
   Eigen::VectorXd getState();
 
 private:
-  static const double gravityConstant =  9.80665;   
+  static const double gravity_constant =  9.80665;   
   void updateMatrices();   
   Eigen::Matrix<double,3,1> angles_;
+  Eigen::Matrix<double,3,1> gravity_orientation;
   Eigen::Matrix<double,6,1> current_measurements_;
-  Eigen::Matrix<double,3,3> H_block_;
   geometry_msgs::Pose pose_;
 };
 

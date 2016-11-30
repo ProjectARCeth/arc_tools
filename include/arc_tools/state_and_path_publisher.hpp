@@ -16,13 +16,12 @@
 class StateAndPathPublisher {
 public:
 	StateAndPathPublisher();
+	void createPublisher(ros::NodeHandle* node);
 	//State (x,y,z  phi,theta,psi, x_dot,y_dot,z_dot, phi_dot,theta_dot,psi_dot, ...).
 	void publish(Eigen::VectorXd x, bool stop);
 
 private:
 	void updateStateVariables(Eigen::VectorXd x, bool stop);
-	nav_msgs::Path updatePath();
-    ros::NodeHandle node_;
     ros::Publisher pub_state_;
     ros::Publisher pub_path_;
 	Eigen::Matrix<double,12,1> x_;

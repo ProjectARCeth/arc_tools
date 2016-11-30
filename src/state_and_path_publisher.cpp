@@ -4,9 +4,13 @@ StateAndPathPublisher::StateAndPathPublisher(){
   //Initialising path_array.
   array_position_ = 0;
   path_vector_.clear();
+  path_.header.frame_id = "header";
+}
+
+void StateAndPathPublisher::createPublisher(ros::NodeHandle* node){
   //Initialising publishing_nodes.
-  pub_state_ = node_.advertise<arc_msgs::State>("/state", 20);
-  pub_path_ = node_.advertise<nav_msgs::Path>("/path", 20);
+  pub_state_ = node->advertise<arc_msgs::State>("/state", 20);
+  pub_path_ = node->advertise<nav_msgs::Path>("/path", 20);
 }
 
 void StateAndPathPublisher::publish(Eigen::VectorXd x, bool stop){
@@ -25,7 +29,7 @@ void StateAndPathPublisher::publish(Eigen::VectorXd x, bool stop){
   state_.pose_diff.twist.angular.z = x_(11,0);
   state_.current_arrayposition = array_position_;
   state_.stop = stop_;
-  path_ = updatePath();
+  path_.poses.push_back(state_.pose);
   //Publishen.
   pub_state_.publish(state_);
   pub_path_.publish(path_);
@@ -39,12 +43,4 @@ void StateAndPathPublisher::updateStateVariables(Eigen::VectorXd x, bool stop){
   stop_ = stop;
 }
 
-nav_msgs::Path StateAndPathPublisher::updatePath(){
-  path_vector_.push_back(state_.pose);
-  int vector_length = path_vector_.size();
-  nav_msgs::Path path;
-  //Readout path_vector_.
-  for (int i = 0; i < vector_length; i++){ path.poses[i] = path_vector_[i]; }
-  return path; 
-}
 

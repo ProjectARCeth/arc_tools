@@ -17,6 +17,7 @@ catkin_simple(ALL_DEPS_REQUIRED)
 cs_add_library(${PROJECT_NAME} 
 	src/state_and_path_publisher.cpp
 	src/coordinate_transform.cpp
+	src/kalman_filter.cpp
 )
 
 #include_directories(include ${catkin_INCLUDE_DIRS})
