@@ -15,6 +15,8 @@
 #include "geometry_msgs/Quaternion.h"
 #include "geometry_msgs/Vector3.h"
 
+namespace arc_tools{
+
 class KalmanFilter {
 public:
   KalmanFilter();
@@ -58,5 +60,6 @@ private:
   Eigen::Matrix<double,6,1> current_measurements_;
   geometry_msgs::Pose pose_;
 };
+}//namespace arc_tools.
 
 #endif

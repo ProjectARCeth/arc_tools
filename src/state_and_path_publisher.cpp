@@ -1,5 +1,7 @@
 #include "arc_tools/state_and_path_publisher.hpp"
 
+namespace arc_tools{
+
 StateAndPathPublisher::StateAndPathPublisher(){
   //Initialising path_array.
   array_position_ = 0;
@@ -41,6 +43,7 @@ void StateAndPathPublisher::updateStateVariables(Eigen::VectorXd x, bool stop){
   //Updating array_position and stop.
   array_position_ += 1;
   stop_ = stop;
+}
 }
 
 

@@ -1,5 +1,7 @@
 #include "arc_tools/kalman_filter.hpp"
 
+namespace arc_tools{
+
 KalmanFilter::KalmanFilter(){
 
   initialized_ = false;
@@ -143,3 +145,5 @@ geometry_msgs::Pose KalmanFilterOrientation::getPose(){
 Eigen::VectorXd KalmanFilterOrientation::getState(){
   return x_;
 }
+
+} //namespace arc_tools.
