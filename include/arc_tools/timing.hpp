@@ -1,5 +1,5 @@
-#ifndef TIMING_ARC_HEADER_HPP
-#define TIMING_ARC_HEADER_HPP
+#ifndef TIMING_ARC_TOOLS_HPP
+#define TIMING_ARC_TOOLS_HPP
 
 namespace arc_tools{
 

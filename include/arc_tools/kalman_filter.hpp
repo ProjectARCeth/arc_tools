@@ -1,7 +1,8 @@
-#ifndef KALMAN_FILTER_ARC_HEADER_HPP
-#define KALMAN_FILTER_ARC_HEADER_HPP
+#ifndef KALMAN_FILTER_ARC_TOOLS_HPP
+#define KALMAN_FILTER_ARC_TOOLS_HPP
 
 #include "arc_tools/coordinate_transform.hpp"
+#include "arc_tools/signal_filter.hpp"
 #include "arc_tools/timing.hpp"
 
 #include "ros/ros.h"
@@ -46,6 +47,7 @@ public:
                       const double error_state_euler_dot, const double error_state_linear_acceleration,
                       const double error_measurement_gyro, const double error_measurement_linear_accelerometer);
   bool update(const sensor_msgs::Imu::ConstPtr& imu_data);
+  void simpleForwardIntegration(const Eigen::VectorXd& z);
   geometry_msgs::Quaternion getOrientation();
   geometry_msgs::Vector3 getAngles();
   geometry_msgs::Point getPoint();
@@ -56,8 +58,9 @@ private:
   static const double gravity_constant =  9.80665;   
   void updateMatrices();   
   Eigen::Matrix<double,3,1> angles_;
-  Eigen::Matrix<double,3,1> gravity_orientation;
+  Eigen::Matrix<double,3,1> gravity_orientation_;
   Eigen::Matrix<double,6,1> current_measurements_;
+  Eigen::Matrix<double,6,1> last_measurements_;
   geometry_msgs::Pose pose_;
 };
 }//namespace arc_tools.
