@@ -21,12 +21,6 @@ namespace arc_tools{
 class KalmanFilter {
 public:
   KalmanFilter();
-  void init(const Eigen::VectorXd& x0,
-            const Eigen::MatrixXd& A,
-            const Eigen::MatrixXd& B,
-            const Eigen::MatrixXd& H,
-            const Eigen::MatrixXd& Q,
-            const Eigen::MatrixXd& R);
   void init(const Eigen::VectorXd& x0);
   void kalmanCore(const Eigen::VectorXd& z); 
   //System dynamics A, Input B, observation H, process noise Q, measurement noise R. 
@@ -40,41 +34,6 @@ public:
   double timestep_;
   Clock time_;
 };
-
-class KalmanFilterOrientation : private KalmanFilter{
- public:
-  void initOrientationFilter(const Eigen::VectorXd& x0);
-  bool update(const sensor_msgs::Imu::ConstPtr& imu_data);
-  Eigen::VectorXd getState();
-
-private:
-  static const double gravity_constant = 9.80665;
-  void updateMatrices();
-};
-
 }//namespace arc_tools.
 
 #endif
-
-// class KalmanFilterOrientation : private KalmanFilter{
-// public:
-//   void initWithErrors(const Eigen::VectorXd& x0,
-//                       const double error_state_euler_dot, const double error_state_linear_acceleration,
-//                       const double error_measurement_gyro, const double error_measurement_linear_accelerometer);
-//   bool update(const sensor_msgs::Imu::ConstPtr& imu_data);
-//   void simpleForwardIntegration(const Eigen::VectorXd& z);
-//   geometry_msgs::Quaternion getOrientation();
-//   geometry_msgs::Vector3 getAngles();
-//   geometry_msgs::Point getPoint();
-//   geometry_msgs::Pose getPose();
-//   Eigen::VectorXd getState();
-
-// private:
-//   static const double gravity_constant =  9.80665;   
-//   void updateMatrices();   
-//   Eigen::Matrix<double,3,1> angles_;
-//   Eigen::Matrix<double,3,1> gravity_orientation_;
-//   Eigen::Matrix<double,6,1> current_measurements_;
-//   Eigen::Matrix<double,6,1> last_measurements_;
-//   geometry_msgs::Pose pose_;
-// };

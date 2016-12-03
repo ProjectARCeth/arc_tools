@@ -21,8 +21,6 @@ cs_add_library(${PROJECT_NAME}
     src/signal_filter.cpp
 )
 
-#include_directories(include ${catkin_INCLUDE_DIRS})
-
 add_executable(rpy_transformation src/test/rpy_transformation.cpp)
 target_link_libraries(rpy_transformation ${catkin_LIBRARIES} ${PROJECT_NAME})
 

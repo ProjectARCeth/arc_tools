@@ -3,9 +3,7 @@
 using namespace arc_tools;
 
 KalmanFilter::KalmanFilter(){
-
   initialized_ = false;
-
 }
 
 void KalmanFilter::init(const Eigen::VectorXd& x0){
@@ -14,28 +12,12 @@ void KalmanFilter::init(const Eigen::VectorXd& x0){
   x_ = x0;
   xbar_ = Eigen::VectorXd::Zero(dimension_);
   u_ = Eigen::VectorXd::Zero(B_.cols());
-  // P_ = Eigen::MatrixXd::Zero(dimension_, dimension_);
-  P_ = Eigen::MatrixXd::Identity(dimension_, dimension_) * 10;
+  P_ = Eigen::MatrixXd::Zero(dimension_, dimension_);
   Pbar_ = Eigen::MatrixXd::Zero(dimension_, dimension_);
   I_ = Eigen::MatrixXd::Identity(dimension_, dimension_);
   initialized_ = true;
   //Initialising Time.
   time_.start();
-}
-
-void KalmanFilter::init(const Eigen::VectorXd& x0,
-                        const Eigen::MatrixXd& A,
-                        const Eigen::MatrixXd& B,
-                        const Eigen::MatrixXd& H,
-                        const Eigen::MatrixXd& Q,
-                        const Eigen::MatrixXd& R){
-  A_ = A;
-  B_ = B;
-  H_ = H;
-  Q_ = Q;
-  R_ = R;
-  //Initialising Vectors and other class variables.
-  init(x0);
 }
 
 void KalmanFilter::kalmanCore(const Eigen::VectorXd& z){
@@ -48,18 +30,6 @@ void KalmanFilter::kalmanCore(const Eigen::VectorXd& z){
   x_ = xbar_ + K_ * (z - H_ * xbar_);
   P_ = (I_ - K_ * H_) * Pbar_;
 }
-
-void KalmanFilterOrientation::initOrientationFilter(){
-  //Initialising state matrices.
-  A_ = Eigen::MatrixXd::Identity(6,6);
-  A_.block<3,3>(3,3) = Eigen::MatrixXd::Identity(3,3) * timestep_;
-}
-
-bool KalmanFilterOrientation::update(const sensor_msgs::Imu::ConstPtr& imu_data){
-  
-  
-}
-
 
 // void KalmanFilterOrientation::initWithErrors(const Eigen::VectorXd& x0,
 //         const double error_state_euler_dot, const double error_state_linear_acceleration,
@@ -135,51 +105,3 @@ bool KalmanFilterOrientation::update(const sensor_msgs::Imu::ConstPtr& imu_data)
 //   return true;
 // }
 
-// void KalmanFilterOrientation::simpleForwardIntegration(const Eigen::VectorXd& z){
-//   //Finding body to global frame transformation matrix.
-//   angles_.segment<3>(0) = x_.segment<3>(3);
-//   Eigen::Matrix<double,3,3>RotationMatrix = getRotationMatrix(angles_);
-//   Eigen::Matrix<double,3,3> Trafomatrix;
-//   Trafomatrix(0,0) = 1.0; Trafomatrix(0,2) = sin(x_(3))*tan(x_(4)); Trafomatrix(0,2) = cos(x_(3))*tan(x_(4));
-//   Trafomatrix(1,0) = 0.0; Trafomatrix(1,1) = cos(x_(3)); Trafomatrix(1,2) = -sin(x_(3));
-//   Trafomatrix(2,0) = 0.0; Trafomatrix(2,1) = sin(x_(3))/cos(x_(4)); Trafomatrix(2,2) = cos(x_(3))/cos(x_(4));
-//   //Expressing measurement in global frame.
-//   x_.segment<3>(12) = RotationMatrix * z.segment<3>(0);
-//   x_.segment<3>(9) = Trafomatrix*RotationMatrix * z.segment<3>(2);
-//   //Forward Integration.
-//   x_.segment<3>(0) = 0.5*timestep_*timestep_*x_.segment<3>(12) 
-//                      + x_.segment<3>(6)*timestep_ + x_.segment<3>(0);
-//   x_.segment<3>(6) = timestep_*x_.segment<3>(12) + x_.segment<3>(6);
-//   x_.segment<3>(3) = timestep_*x_.segment<3>(9) + x_.segment<3>(3);
-// }
-
-// geometry_msgs::Quaternion KalmanFilterOrientation::getOrientation(){
-//   angles_.segment<3>(0) = x_.segment<3>(3);
-//   return transformQuaternionEuler(angles_);
-// }
-
-// geometry_msgs::Vector3 KalmanFilterOrientation::getAngles(){
-//   geometry_msgs::Vector3 euler;
-//   euler.x = x_(3);
-//   euler.y = x_(4);
-//   euler.z = x_(5);
-//   return euler;
-// }
-
-// geometry_msgs::Point KalmanFilterOrientation::getPoint(){
-//   geometry_msgs::Point point;
-//   point.x = x_(0);
-//   point.y = x_(1);
-//   point.z = x_(2);
-//   return point;
-// }
-
-// geometry_msgs::Pose KalmanFilterOrientation::getPose(){
-//   pose_.position = getPoint();
-//   pose_.orientation = getOrientation();
-//   return pose_;
-// }
-
-// Eigen::VectorXd KalmanFilterOrientation::getState(){
-//   return x_;
-// }
