@@ -1,6 +1,6 @@
 #include "arc_tools/coordinate_transform.hpp"
 
-namespace arc_tools{
+// using namespace arc_tools;
 
 geometry_msgs::Quaternion transformQuaternionEuler(const Eigen::Vector3d euler){
 
@@ -26,9 +26,8 @@ geometry_msgs::Quaternion transformQuaternionEuler(const Eigen::Vector3d euler){
 }
 
 geometry_msgs::Vector3 transformEulerQuaternion(const Eigen::Vector4d quat){
-
   geometry_msgs::Vector3 euler;
-
+  //Transformation.
   double ysqr = quat(1) * quat(1);
   double t0 = -2.0f * (ysqr + quat(2) * quat(2)) + 1.0f;
   double t1 = +2.0f * (quat(0) * quat(1) - quat(3) * quat(2));
@@ -47,11 +46,10 @@ geometry_msgs::Vector3 transformEulerQuaternion(const Eigen::Vector4d quat){
 }
 
 Eigen::Matrix3d getRotationMatrix(const Eigen::Vector3d angles){
-
   double phi = angles(0);
   double theta = angles(1);
   double psi = angles(2);
-
+  //Rotation matrix.
   Eigen::Matrix3d rotation_matrix;
   rotation_matrix(0,0) = cos(theta)*cos(psi);
   rotation_matrix(0,1) = -cos(theta)*sin(psi); 
@@ -64,4 +62,3 @@ Eigen::Matrix3d getRotationMatrix(const Eigen::Vector3d angles){
   rotation_matrix(2,2) = cos(phi)*cos(theta); 
   return rotation_matrix;
 }
-}//namespace arc_tools.
