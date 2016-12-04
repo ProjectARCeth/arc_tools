@@ -62,3 +62,14 @@ Eigen::Matrix3d getRotationMatrix(const Eigen::Vector3d angles){
   rotation_matrix(2,2) = cos(phi)*cos(theta); 
   return rotation_matrix;
 }
+
+Eigen::Matrix3d getAngularVelocityTransformationMatrix(const Eigen::Vector3d angles){
+  Eigen::Matrix<double,3,3> Trafomatrix;
+  double roll = angles(0);
+  double pitch = angles(1);
+  double yaw = angles(2);
+  Trafomatrix(0,0) = 1.0; Trafomatrix(0,2) = sin(roll)*tan(pitch); Trafomatrix(0,2) = cos(roll)*tan(pitch);
+  Trafomatrix(1,0) = 0.0; Trafomatrix(1,1) = cos(roll); Trafomatrix(1,2) = -sin(roll);
+  Trafomatrix(2,0) = 0.0; Trafomatrix(2,1) = sin(roll)/cos(pitch); Trafomatrix(2,2) = cos(roll)/cos(pitch);
+  return Trafomatrix;
+}
