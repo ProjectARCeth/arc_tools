@@ -2,30 +2,45 @@
 
 // using namespace arc_tools;
 
-geometry_msgs::Quaternion transformQuaternionEuler(const Eigen::Vector3d euler){
-
+geometry_msgs::Quaternion transformQuaternionEulerMsg(const Eigen::Vector3d euler){
   geometry_msgs::Quaternion quat;
-
+  //Transformation.
   float roll = euler(0);
   float pitch = euler(1);
   float yaw = euler(2); 
-
   double t0 = cos(yaw * 0.5f);
   double t1 = sin(yaw * 0.5f);
   double t2 = cos(roll * 0.5f);
   double t3 = sin(roll * 0.5f);
   double t4 = cos(pitch * 0.5f);
   double t5 = sin(pitch * 0.5f);
-
   quat.w = t0 * t2 * t4 + t1 * t3 * t5;
   quat.x = t0 * t3 * t4 - t1 * t2 * t5;
   quat.y = t0 * t2 * t5 + t1 * t3 * t4;
   quat.z = t1 * t2 * t4 - t0 * t3 * t5;
-  
   return quat;
 }
 
-geometry_msgs::Vector3 transformEulerQuaternion(const Eigen::Vector4d quat){
+Eigen::Vector4d transformQuaternionEulerVector(const Eigen::Vector3d euler){
+  Eigen::Vector4d quat;
+  //Transformation.
+  float roll = euler(0);
+  float pitch = euler(1);
+  float yaw = euler(2); 
+  double t0 = cos(yaw * 0.5f);
+  double t1 = sin(yaw * 0.5f);
+  double t2 = cos(roll * 0.5f);
+  double t3 = sin(roll * 0.5f);
+  double t4 = cos(pitch * 0.5f);
+  double t5 = sin(pitch * 0.5f);
+  quat(3) = t0 * t2 * t4 + t1 * t3 * t5;
+  quat(0) = t0 * t3 * t4 - t1 * t2 * t5;
+  quat(1) = t0 * t2 * t5 + t1 * t3 * t4;
+  quat(2) = t1 * t2 * t4 - t0 * t3 * t5;
+  return quat;
+}
+
+geometry_msgs::Vector3 transformEulerQuaternionMsg(const Eigen::Vector4d quat){
   geometry_msgs::Vector3 euler;
   //Transformation.
   double ysqr = quat(1) * quat(1);
@@ -34,14 +49,28 @@ geometry_msgs::Vector3 transformEulerQuaternion(const Eigen::Vector4d quat){
   double t2 = -2.0f * (quat(0) * quat(2) + quat(3) * quat(1));
   double t3 = +2.0f * (quat(1) * quat(2) - quat(3) * quat(0));
   double t4 = -2.0f * (quat(0) * quat(0) + ysqr) + 1.0f;
-
   t2 = t2 > 1.0f ? 1.0f : t2;
   t2 = t2 < -1.0f ? -1.0f : t2;
-
   euler.y = std::asin(t2);
   euler.x = std::atan2(t3, t4);
   euler.z = std::atan2(t1, t0);
+  return euler;
+}
 
+Eigen::Vector3d transformEulerQuaternionVector(const Eigen::Vector4d quat){
+  Eigen::Vector3d euler;
+  //Transformation.
+  double ysqr = quat(1) * quat(1);
+  double t0 = -2.0f * (ysqr + quat(2) * quat(2)) + 1.0f;
+  double t1 = +2.0f * (quat(0) * quat(1) - quat(3) * quat(2));
+  double t2 = -2.0f * (quat(0) * quat(2) + quat(3) * quat(1));
+  double t3 = +2.0f * (quat(1) * quat(2) - quat(3) * quat(0));
+  double t4 = -2.0f * (quat(0) * quat(0) + ysqr) + 1.0f;
+  t2 = t2 > 1.0f ? 1.0f : t2;
+  t2 = t2 < -1.0f ? -1.0f : t2;
+  euler(1) = std::asin(t2);
+  euler(0) = std::atan2(t3, t4);
+  euler(2) = std::atan2(t1, t0);
   return euler;
 }
 
@@ -73,3 +102,28 @@ Eigen::Matrix3d getAngularVelocityTransformationMatrix(const Eigen::Vector3d ang
   Trafomatrix(2,0) = 0.0; Trafomatrix(2,1) = sin(roll)/cos(pitch); Trafomatrix(2,2) = cos(roll)/cos(pitch);
   return Trafomatrix;
 }
+
+Eigen::Vector3d transformVectorMessageToEigen(const geometry_msgs::Vector3 msg){
+  Eigen::Vector3d eigen_vector;
+  eigen_vector(0) = msg.x;
+  eigen_vector(1) = msg.y;
+  eigen_vector(2) = msg.z;
+  return eigen_vector;
+}
+
+Eigen::Vector3d transformPointMessageToEigen(const geometry_msgs::Point msg){
+  Eigen::Vector3d eigen_vector;
+  eigen_vector(0) = msg.x;
+  eigen_vector(1) = msg.y;
+  eigen_vector(2) = msg.z;
+  return eigen_vector;
+}
+
+Eigen::Vector4d transformQuatMessageToEigen(const geometry_msgs::Quaternion msg){
+  Eigen::Vector4d eigen_vector;
+  eigen_vector(0) = msg.x;
+  eigen_vector(1) = msg.y;
+  eigen_vector(2) = msg.z;
+  eigen_vector(3) = msg.w;
+  return eigen_vector;
+} 

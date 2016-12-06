@@ -20,16 +20,15 @@ public:
 	StateAndPathPublisher();
 	void createPublisher(ros::NodeHandle* node);
 	//State (x,y,z  phi,theta,psi, x_dot,y_dot,z_dot, phi_dot,theta_dot,psi_dot, ...).
-	void publish(Eigen::VectorXd x, bool stop);
+	void publishWithEuler(Eigen::Vector3d position, Eigen::Vector3d euler, 
+						  Eigen::Vector3d lin_vel, Eigen::Vector3d ang_vel, bool stop);
+	void publishWithQuaternion(Eigen::Vector3d position, Eigen::Vector4d quat, 
+						       Eigen::Vector3d lin_vel, Eigen::Vector3d ang_vel, bool stop);
 
 private:
-	void updateStateVariables(Eigen::VectorXd x, bool stop);
     ros::Publisher pub_state_;
     ros::Publisher pub_path_;
-	Eigen::Matrix<double,12,1> x_;
-	bool stop_;
 	int array_position_;
-	geometry_msgs::Quaternion quat_;
 	arc_msgs::State state_;
 	std::vector<geometry_msgs::PoseStamped> path_vector_;
 	nav_msgs::Path path_;
