@@ -1,6 +1,6 @@
 #include "arc_tools/state_and_path_publisher.hpp"
 
-using namespace arc_tools;
+namespace arc_tools{
 
 StateAndPathPublisher::StateAndPathPublisher(){
   //Initialising path_array.
@@ -48,4 +48,4 @@ void StateAndPathPublisher::publishWithEuler(Eigen::Vector3d position, Eigen::Ve
   //Updating state and publishing.
   publishWithQuaternion(position, quat, lin_vel, ang_vel, stop);
 }
-
+}//namespace arc_tools.

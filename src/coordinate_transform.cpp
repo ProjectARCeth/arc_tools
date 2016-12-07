@@ -1,6 +1,6 @@
 #include "arc_tools/coordinate_transform.hpp"
 
-// using namespace arc_tools;
+namespace arc_tools {
 
 geometry_msgs::Quaternion transformQuaternionEulerMsg(const Eigen::Vector3d euler){
   geometry_msgs::Quaternion quat;
@@ -127,3 +127,4 @@ Eigen::Vector4d transformQuatMessageToEigen(const geometry_msgs::Quaternion msg)
   eigen_vector(3) = msg.w;
   return eigen_vector;
 } 
+}//namespace arc_tools.

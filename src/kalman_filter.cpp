@@ -1,6 +1,6 @@
 #include "arc_tools/kalman_filter.hpp"
 
-using namespace arc_tools;
+namespace arc_tools{
 
 KalmanFilter::KalmanFilter(){
   initialized_ = false;
@@ -104,4 +104,4 @@ void KalmanFilter::kalmanCore(const Eigen::VectorXd& z){
 //   // kalmanCore(current_measurements_);
 //   return true;
 // }
-
+}//namespace arc_tools.

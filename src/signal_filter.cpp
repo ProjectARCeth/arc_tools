@@ -1,6 +1,6 @@
 #include "arc_tools/signal_filter.hpp"
 
-// using namespace arc_tools;
+namespace arc_tools{
 
 Eigen::VectorXd firstOrderLowPassIIRFilter(const Eigen::VectorXd input, const Eigen::VectorXd last_output, 
                                           float alpha){
@@ -19,4 +19,5 @@ Eigen::VectorXd limitFilter(Eigen::VectorXd input, double limit){
 	}
   return input;
 }
+}//namespace arc_tools.
 

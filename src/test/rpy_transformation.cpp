@@ -12,7 +12,7 @@ int main(int argc, char** argv){
 	euler(0) = roll; euler(1) = pitch; euler(2) = yaw;
 	//Trafo Matrix.
 	// Eigen::Matrix3d Trafo = arc_tools::getRotationMatrix(euler);
-	Eigen::Matrix3d Trafo = getRotationMatrix(euler);
+	Eigen::Matrix3d Trafo = arc_tools::getRotationMatrix(euler);
 	//Cartesian Coords global.
 	double x_global = 1.0;
 	double y_global = 0.0;

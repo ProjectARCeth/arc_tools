@@ -5,12 +5,12 @@
 #include <cmath>
 #include <iostream>
 
-// namespace arc_tools{
+namespace arc_tools{
 
 Eigen::VectorXd firstOrderLowPassIIRFilter(Eigen::VectorXd input, Eigen::VectorXd last_output, 
                                           float alpha);
 Eigen::VectorXd limitFilter(Eigen::VectorXd input, double limit);
 
-// }//namespace arc_tools.
+}//namespace arc_tools.
 
 #endif
