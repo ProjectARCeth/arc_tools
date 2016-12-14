@@ -6,6 +6,7 @@
 
 #include "ros/ros.h"
 #include "Eigen/Dense"
+#include <fstream>
 #include <iostream>
 
 #include "geometry_msgs/PoseStamped.h"
@@ -17,7 +18,7 @@ namespace arc_tools{
 
 class StateAndPathPublisher {
 public:
-	StateAndPathPublisher();
+	StateAndPathPublisher(std::string pub_name, std::string filename);
 	void createPublisher(ros::NodeHandle* node);
 	//State (x,y,z  phi,theta,psi, x_dot,y_dot,z_dot, phi_dot,theta_dot,psi_dot, ...).
 	void publishWithEuler(Eigen::Vector3d position, Eigen::Vector3d euler, 
@@ -32,6 +33,8 @@ private:
 	arc_msgs::State state_;
 	std::vector<geometry_msgs::PoseStamped> path_vector_;
 	nav_msgs::Path path_;
+	std::string pub_name_;
+	std::ofstream stream_;
 };
 }//namespace arc_tools.
 
