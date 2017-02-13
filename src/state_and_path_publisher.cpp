@@ -2,17 +2,23 @@
 
 namespace arc_tools{
 
-StateAndPathPublisher::StateAndPathPublisher(){
+StateAndPathPublisher::StateAndPathPublisher(std::string pub_name, std::string filename){
+  //Setting Publisher name.
+  pub_name_ = pub_name;
+  //Initialising path txt_file.
+  std::string filename_all = filename+".txt";
+  stream_.open(filename_all.c_str());
   //Initialising path_array.
   array_position_ = 0;
   path_vector_.clear();
-  path_.header.frame_id = "path";
+  path_.header.frame_id = pub_name_;
+
 }
 
 void StateAndPathPublisher::createPublisher(ros::NodeHandle* node){
   //Initialising publishing_nodes.
   pub_state_ = node->advertise<arc_msgs::State>("/state", 20);
-  pub_path_ = node->advertise<nav_msgs::Path>("/path", 20);
+  pub_path_ = node->advertise<nav_msgs::Path>("/"+pub_name_, 20);
 }
 
 void StateAndPathPublisher::publishWithQuaternion(Eigen::Vector3d position, Eigen::Vector4d quat, 
@@ -39,6 +45,12 @@ void StateAndPathPublisher::publishWithQuaternion(Eigen::Vector3d position, Eige
   //Publishen.
   pub_state_.publish(state_);
   pub_path_.publish(path_);
+  //Writing path File.
+  stream_ <<array_position_<<" "<<
+           position(0)<<" "<<position(1)<<" "<<position(2)<<" "<<
+           quat(0)<<" "<<quat(1)<<" "<<quat(2)<<" "<<quat(3)<<" "<<
+           lin_vel(0)<<" "<<lin_vel(1)<<" "<<lin_vel(2)<<" "<<
+           ang_vel(0)<<" "<<ang_vel(1)<<" "<<ang_vel(2)<<" "<<stop<<"  ";
 }
 
 void StateAndPathPublisher::publishWithEuler(Eigen::Vector3d position, Eigen::Vector3d euler, 
