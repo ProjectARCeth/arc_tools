@@ -16,13 +16,8 @@ catkin_simple(ALL_DEPS_REQUIRED)
 
 cs_add_library(${PROJECT_NAME} 
     src/coordinate_transform.cpp
-	src/state_and_path_publisher.cpp
-	src/kalman_filter.cpp
-    src/signal_filter.cpp
+    src/timing.cpp
 )
-
-add_executable(rpy_transformation src/test/rpy_transformation.cpp)
-target_link_libraries(rpy_transformation ${catkin_LIBRARIES} ${PROJECT_NAME})
 
 cs_install()
 cs_export()

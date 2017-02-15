@@ -1,36 +1,21 @@
 #ifndef TIMING_ARC_TOOLS_HPP
 #define TIMING_ARC_TOOLS_HPP
 
+#include <iostream>
+#include <sys/time.h>
+
 namespace arc_tools{
 
 class Clock {
-
  public:
-  Clock() { start(); first_step_ = true;}
-  double getTimestep(){
-  	if(first_step_){
-  		last_time_ = getTime();
-      first_step_ = false;
-  	}
-  	current_time_ = getTime();
-  	time_step_ = current_time_ - last_time_;
-  	last_time_ = getTime();
-  	return time_step_ * kMilisecondsToSeconds;
-  }
-  void start(){ gettimeofday(&real_time_start_, NULL); }
+  Clock();
+  double getTimestep();
+  void start();
+
  private:
-  double getTime() { takeTime(); return getRealTime(); }
-  double getRealTime() { return real_time_ms_;}
-  void takeTime(){
-  	//Updating cpu Time
-    struct timeval end;
-    gettimeofday(&end, NULL);
-    long seconds, useconds;
-    seconds  = end.tv_sec  - real_time_start_.tv_sec;
-    useconds = end.tv_usec - real_time_start_.tv_usec;
-    real_time_ms_ = (seconds * kSecondsToMiliseconds +
-        useconds * kMicrosecondsToMiliseconds) + 0.5;
-  }
+  double getTime();
+  double getRealTime();
+  void takeTime();
   struct timeval real_time_start_;
   double real_time_ms_;
   bool first_step_;
