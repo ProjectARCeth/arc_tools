@@ -2,12 +2,12 @@
 
 namespace arc_tools {
 
-geometry_msgs::Quaternion transformQuaternionEulerMsg(const Eigen::Vector3d euler){
+geometry_msgs::Quaternion transformQuaternionEulerMsg(const geometry_msgs::Vector3 euler){
   geometry_msgs::Quaternion quat;
   //Transformation.
-  float roll = euler(0);
-  float pitch = euler(1);
-  float yaw = euler(2); 
+  float roll = euler.x;
+  float pitch = euler.y;
+  float yaw = euler.z; 
   double t0 = cos(yaw * 0.5f);
   double t1 = sin(yaw * 0.5f);
   double t2 = cos(roll * 0.5f);
@@ -43,34 +43,46 @@ Eigen::Vector4d transformQuaternionEulerVector(const Eigen::Vector3d euler){
 geometry_msgs::Vector3 transformEulerQuaternionMsg(const Eigen::Vector4d quat){
   geometry_msgs::Vector3 euler;
   //Transformation.
-  double ysqr = quat(1) * quat(1);
-  double t0 = -2.0f * (ysqr + quat(2) * quat(2)) + 1.0f;
-  double t1 = +2.0f * (quat(0) * quat(1) - quat(3) * quat(2));
-  double t2 = -2.0f * (quat(0) * quat(2) + quat(3) * quat(1));
-  double t3 = +2.0f * (quat(1) * quat(2) - quat(3) * quat(0));
-  double t4 = -2.0f * (quat(0) * quat(0) + ysqr) + 1.0f;
-  t2 = t2 > 1.0f ? 1.0f : t2;
-  t2 = t2 < -1.0f ? -1.0f : t2;
-  euler.y = std::asin(t2);
-  euler.x = std::atan2(t3, t4);
-  euler.z = std::atan2(t1, t0);
+	double ysqr = quat(1) * quat(1);
+
+	// roll (x-axis rotation)
+	double t0 = +2.0 * (quat(3) * quat(0) + quat(1) * quat(2));
+	double t1 = +1.0 - 2.0 * (quat(0) * quat(0) + ysqr);
+	euler.x = std::atan2(t0, t1);
+
+	// pitch (y-axis rotation)
+	double t2 = +2.0 * (quat(3) * quat(1) - quat(2) * quat(0));
+	t2 = t2 > 1.0 ? 1.0 : t2;
+	t2 = t2 < -1.0 ? -1.0 : t2;
+	euler.y = std::asin(t2);
+
+	// yaw (z-axis rotation)
+	double t3 = +2.0 * (quat(3) * quat(2) + quat(0) * quat(1));
+	double t4 = +1.0 - 2.0 * (ysqr + quat(2) * quat(2));  
+	euler.z = std::atan2(t3, t4);
   return euler;
 }
 
 Eigen::Vector3d transformEulerQuaternionVector(const Eigen::Vector4d quat){
   Eigen::Vector3d euler;
   //Transformation.
-  double ysqr = quat(1) * quat(1);
-  double t0 = -2.0f * (ysqr + quat(2) * quat(2)) + 1.0f;
-  double t1 = +2.0f * (quat(0) * quat(1) - quat(3) * quat(2));
-  double t2 = -2.0f * (quat(0) * quat(2) + quat(3) * quat(1));
-  double t3 = +2.0f * (quat(1) * quat(2) - quat(3) * quat(0));
-  double t4 = -2.0f * (quat(0) * quat(0) + ysqr) + 1.0f;
-  t2 = t2 > 1.0f ? 1.0f : t2;
-  t2 = t2 < -1.0f ? -1.0f : t2;
-  euler(1) = std::asin(t2);
-  euler(0) = std::atan2(t3, t4);
-  euler(2) = std::atan2(t1, t0);
+	double ysqr = quat(1) * quat(1);
+
+	// roll (x-axis rotation)
+	double t0 = +2.0 * (quat(3) * quat(0) + quat(1) * quat(2));
+	double t1 = +1.0 - 2.0 * (quat(0) * quat(0) + ysqr);
+	euler(0) = std::atan2(t0, t1);
+
+	// pitch (y-axis rotation)
+	double t2 = +2.0 * (quat(3) * quat(1) - quat(2) * quat(0));
+	t2 = t2 > 1.0 ? 1.0 : t2;
+	t2 = t2 < -1.0 ? -1.0 : t2;
+	euler(1) = std::asin(t2);
+
+	// yaw (z-axis rotation)
+	double t3 = +2.0 * (quat(3) * quat(2) + quat(0) * quat(1));
+	double t4 = +1.0 - 2.0 * (ysqr + quat(2) * quat(2));  
+	euler(2) = std::atan2(t3, t4);
   return euler;
 }
 
