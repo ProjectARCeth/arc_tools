@@ -22,6 +22,7 @@ Eigen::Matrix3d getAngularVelocityTransformationMatrix(const Eigen::Vector3d ang
 Eigen::Vector3d transformVectorMessageToEigen(const geometry_msgs::Vector3 msg);
 Eigen::Vector3d transformPointMessageToEigen(const geometry_msgs::Point msg);
 Eigen::Vector4d transformQuatMessageToEigen(const geometry_msgs::Quaternion msg);
+geometry_msgs::Point transformEigenToPointMessage(const Eigen::Vector3d msg);
 
 }//namespace arc_tools.
 

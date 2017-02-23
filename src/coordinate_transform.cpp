@@ -131,6 +131,14 @@ Eigen::Vector3d transformPointMessageToEigen(const geometry_msgs::Point msg){
   return eigen_vector;
 }
 
+geometry_msgs::Point transformEigenToPointMessage(const Eigen::Vector3d msg){
+  geometry_msgs::Point point;
+  point.x=msg(0);
+  point.x=msg(1);
+  point.x=msg(2);
+
+  return point;
+}
 Eigen::Vector4d transformQuatMessageToEigen(const geometry_msgs::Quaternion msg){
   Eigen::Vector4d eigen_vector;
   eigen_vector(0) = msg.x;
