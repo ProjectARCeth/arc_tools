@@ -147,4 +147,27 @@ Eigen::Vector4d transformQuatMessageToEigen(const geometry_msgs::Quaternion msg)
   eigen_vector(3) = msg.w;
   return eigen_vector;
 } 
+
+geometry_msgs::Point globalToLocal(geometry_msgs::Point global_koordinate,arc_msgs::State new_frame_origin)
+{
+  //Translatation
+  Eigen::Vector3d glob=arc_tools::transformPointMessageToEigen(global_koordinate);
+  Eigen::Vector3d stat= arc_tools::transformPointMessageToEigen(new_frame_origin.pose.pose.position);
+//std::cout<<stat(0)<<" "<<stat(1)<<" "<<stat(2)<<std::endl;
+  Eigen::Vector3d temp=glob-stat;
+//std::cout<<temp(0)<<" "<<temp(1)<<" "<<temp(2)<<std::endl;
+  //Rotation
+  Eigen::Vector4d quat=transformQuatMessageToEigen(new_frame_origin.pose.pose.orientation);
+  Eigen::Vector3d euler=transformEulerQuaternionVector(quat);
+  Eigen::Matrix3d R=getRotationMatrix(euler);
+  Eigen::Matrix3d T=R.transpose();
+	
+//std::cout<<R(0,0)<<" "<<R(0,1)<<" "<<R(0,2)<<std::endl<<" "<<R(1,0)<<" "<<R(1,1)<<" "<<R(1,2)<<std::endl<<" "<<R(2,0)<<" "<<R(2,1)<<" "<<R(2,2)<<std::endl;
+
+  Eigen::Vector3d local=T*temp;
+//std::cout<<local(0)<<" "<<local(1)<<" "<<local(2)<<std::endl;
+  geometry_msgs::Point local_msg=transformEigenToPointMessage(local);
+//std::cout<<local_msg.x<<" "<<local_msg.y<<" "<<local_msg.z<<std::endl;
+  return local_msg;
+}
 }//namespace arc_tools.
