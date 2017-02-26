@@ -134,8 +134,8 @@ Eigen::Vector3d transformPointMessageToEigen(const geometry_msgs::Point msg){
 geometry_msgs::Point transformEigenToPointMessage(const Eigen::Vector3d msg){
   geometry_msgs::Point point;
   point.x=msg(0);
-  point.x=msg(1);
-  point.x=msg(2);
+  point.y=msg(1);
+  point.z=msg(2);
 
   return point;
 }
