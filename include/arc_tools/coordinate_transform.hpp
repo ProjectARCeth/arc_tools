@@ -12,7 +12,7 @@
 
 namespace arc_tools {
 
-geometry_msgs::Quaternion transformQuaternionEulerMsg(const Eigen::Vector3d euler);
+geometry_msgs::Quaternion transformQuaternionEulerMsg(const geometry_msgs::Vector3 euler);
 Eigen::Vector4d transformQuaternionEulerVector(const Eigen::Vector3d euler);
 geometry_msgs::Vector3 transformEulerQuaternionMsg(const Eigen::Vector4d quat);
 Eigen::Vector3d transformEulerQuaternionVector(const Eigen::Vector4d quat);
