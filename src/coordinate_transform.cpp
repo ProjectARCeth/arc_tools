@@ -87,20 +87,38 @@ Eigen::Vector3d transformEulerQuaternionVector(const Eigen::Vector4d quat){
 }
 
 Eigen::Matrix3d getRotationMatrix(const Eigen::Vector3d angles){
-  double phi = angles(0);
-  double theta = angles(1);
-  double psi = angles(2);
+  double alpha = angles(0);
+  double beta = angles(1);
+  double gamma = angles(2);
   //Rotation matrix.
   Eigen::Matrix3d rotation_matrix;
-  rotation_matrix(0,0) = cos(theta)*cos(psi);
-  rotation_matrix(0,1) = -cos(theta)*sin(psi); 
-  rotation_matrix(0,2) = sin(theta); 
-  rotation_matrix(1,0) = sin(phi)*sin(theta)*cos(psi) + cos(phi)*sin(psi);
-  rotation_matrix(1,1) = -sin(phi)*sin(theta)*sin(psi) + cos(phi)*cos(psi); 
-  rotation_matrix(1,2) = -sin(phi)*cos(theta); 
-  rotation_matrix(2,0) = -cos(phi)*sin(theta)*cos(psi) + sin(phi)*sin(psi);
-  rotation_matrix(2,1) = cos(phi)*sin(theta)*sin(psi) + sin(phi)*cos(psi); 
-  rotation_matrix(2,2) = cos(phi)*cos(theta); 
+  Eigen::Matrix3d rotation_z_axis;
+  Eigen::Matrix3d rotation_xnew_axis;
+  Eigen::Matrix3d rotation_znewnew_axis;
+  rotation_z_axis<<	cos(alpha),	sin(alpha),		0,
+				-sin(alpha),cos(alpha),		0,
+				0,		0,			1;
+
+  rotation_xnew_axis<<	1,		0,			0,
+				0,		cos(beta),		sin(beta),
+				0,		-sin(beta),		cos(beta);
+
+  rotation_znewnew_axis<<	cos(gamma),	sin(gamma),		0,
+				-sin(gamma),cos(gamma),		0,
+				0,		0,			1;
+
+	rotation_matrix= rotation_z_axis * rotation_xnew_axis * rotation_znewnew_axis;
+  Eigen::Matrix3d rotation_matri;
+  rotation_matri(0,0) = cos(beta)*cos(gamma);
+  rotation_matri(0,1) = -cos(beta)*sin(gamma); 
+  rotation_matri(0,2) = sin(beta); 
+  rotation_matri(1,0) = sin(alpha)*sin(beta)*cos(gamma) + cos(alpha)*sin(gamma);
+  rotation_matri(1,1) = -sin(alpha)*sin(beta)*sin(gamma) + cos(alpha)*cos(gamma); 
+  rotation_matri(1,2) = -sin(alpha)*cos(beta); 
+  rotation_matri(2,0) = -cos(alpha)*sin(beta)*cos(gamma) + sin(alpha)*sin(gamma);
+  rotation_matri(2,1) = cos(alpha)*sin(beta)*sin(gamma) + sin(alpha)*cos(gamma); 
+  rotation_matri(2,2) = cos(alpha)*cos(beta);
+  std::cout<<rotation_matri<<std::endl<<std::endl; 
   return rotation_matrix;
 }
 
@@ -169,5 +187,21 @@ geometry_msgs::Point globalToLocal(const geometry_msgs::Point global_koordinate,
   geometry_msgs::Point local_msg=transformEigenToPointMessage(local);
   std::cout<<"local: "<<local_msg.x<<" "<<local_msg.y<<" "<<std::endl;
   return local_msg;
+}
+
+arc_msgs::State generate2DState(const float x, const float y, const float alpha )
+{
+  arc_msgs::State state;
+  state.pose.pose.position.x=x;
+  state.pose.pose.position.y=y;
+  geometry_msgs::Vector3 eu;
+  eu.x=0;
+  eu.y=0;
+  eu.z=alpha;
+  geometry_msgs::Quaternion quat;
+  quat=arc_tools::transformQuaternionEulerMsg(eu);
+  state.pose.pose.orientation=quat;
+  return state;
+
 }
 }//namespace arc_tools.
