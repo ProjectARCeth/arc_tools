@@ -86,13 +86,13 @@ Eigen::Vector3d transformEulerQuaternionVector(const Eigen::Vector4d quat){
   return euler;
 }
 
-Eigen::Matrix3d getRotationMatrix(const Eigen::Vector3d angles){
-  double alpha = angles(0);
-  double beta = angles(1);
-  double gamma = angles(2);
+Eigen::Matrix3d getRotationMatrix(const Eigen::Vector3d angles){	
+  double roll = angles(0);
+  double pitch = angles(1);
+  double yaw = angles(2);
   //Rotation matrix.
   Eigen::Matrix3d rotation_matrix;
-  Eigen::Matrix3d rotation_z_axis;
+  /*Eigen::Matrix3d rotation_z_axis;
   Eigen::Matrix3d rotation_xnew_axis;
   Eigen::Matrix3d rotation_znewnew_axis;
   rotation_z_axis<<	cos(alpha),	sin(alpha),		0,
@@ -107,7 +107,12 @@ Eigen::Matrix3d getRotationMatrix(const Eigen::Vector3d angles){
 				-sin(gamma),cos(gamma),		0,
 				0,		0,			1;
 
-	rotation_matrix= rotation_z_axis * rotation_xnew_axis * rotation_znewnew_axis;
+	rotation_matrix= rotation_znewnew_axis * rotation_xnew_axis * rotation_z_axis;
+*/
+rotation_matrix<<	cos(yaw)*cos(pitch), 	cos(yaw)*sin(pitch)*sin(roll)-sin(yaw)*cos(roll),	cos(yaw)*sin(pitch)*cos(roll)+sin(yaw)*sin(roll) ,
+			sin(yaw)*cos(pitch),	sin(yaw)*sin(pitch)*sin(roll)+cos(yaw)*cos(roll),	sin(yaw)*sin(pitch)*cos(roll)-cos(yaw)*sin(roll),
+			-sin(pitch),		cos(pitch)*sin(roll), 						cos(pitch)*cos(roll);
+/* 	
   Eigen::Matrix3d rotation_matri;
   rotation_matri(0,0) = cos(beta)*cos(gamma);
   rotation_matri(0,1) = -cos(beta)*sin(gamma); 
@@ -119,6 +124,7 @@ Eigen::Matrix3d getRotationMatrix(const Eigen::Vector3d angles){
   rotation_matri(2,1) = cos(alpha)*sin(beta)*sin(gamma) + sin(alpha)*cos(gamma); 
   rotation_matri(2,2) = cos(alpha)*cos(beta);
   std::cout<<rotation_matri<<std::endl<<std::endl; 
+*/
   return rotation_matrix;
 }
 
@@ -186,6 +192,10 @@ geometry_msgs::Point globalToLocal(const geometry_msgs::Point global_koordinate,
 //std::cout<<local(0)<<" "<<local(1)<<" "<<local(2)<<std::endl;
   geometry_msgs::Point local_msg=transformEigenToPointMessage(local);
   std::cout<<"local: "<<local_msg.x<<" "<<local_msg.y<<" "<<std::endl;
+  geometry_msgs::Point local_msg_new_axes;
+  local_msg_new_axes.x=-local_msg.y;
+  local_msg_new_axes.y=local_msg.x;
+  local_msg_new_axes.z=local_msg.z;
   return local_msg;
 }
 

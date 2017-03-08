@@ -17,6 +17,15 @@ class Clock {
   	last_time_ = getTime();
   	return time_step_ * kMilisecondsToSeconds;
   }
+  double getTimeFromStart(){
+  	if(first_step_){
+  		last_time_ = getTime();
+      first_step_ = false;
+  	}
+  	current_time_ = getTime();
+  	time_step_ = current_time_ - last_time_;
+  	return time_step_ * kMilisecondsToSeconds;
+  }
   void start(){ gettimeofday(&real_time_start_, NULL); }
  private:
   double getTime() { takeTime(); return getRealTime(); }
