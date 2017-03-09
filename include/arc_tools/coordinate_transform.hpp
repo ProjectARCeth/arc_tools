@@ -24,7 +24,7 @@ Eigen::Vector3d transformVectorMessageToEigen(const geometry_msgs::Vector3 msg);
 Eigen::Vector3d transformPointMessageToEigen(const geometry_msgs::Point msg);
 Eigen::Vector4d transformQuatMessageToEigen(const geometry_msgs::Quaternion msg);
 geometry_msgs::Point transformEigenToPointMessage(const Eigen::Vector3d msg);
-geometry_msgs::Quaternion transformEigenToQuatMessage(const Eigen::Vector4d msg)
+geometry_msgs::Quaternion transformEigenToQuatMessage(const Eigen::Vector4d msg);
 
 geometry_msgs::Point globalToLocal(geometry_msgs::Point global_koordinate,arc_msgs::State new_frame_origin);
 arc_msgs::State generate2DState(const float x, const float y, const float alpha );
