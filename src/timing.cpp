@@ -15,6 +15,16 @@ double Clock::getTimestep(){
   return time_step_ * kMilisecondsToSeconds;
 }
 
+double Clock::getTimeFromStart(){
+  if(first_step_){
+    last_time_ = getTime();
+    first_step_ = false;
+  }
+  current_time_ = getTime();
+  time_step_ = current_time_ - last_time_;
+  return time_step_ * kMilisecondsToSeconds;
+}
+
 void Clock::start(){ gettimeofday(&real_time_start_, NULL); }
 
 double Clock::getTime() { takeTime(); return getRealTime(); }

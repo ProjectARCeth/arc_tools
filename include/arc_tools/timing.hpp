@@ -9,27 +9,10 @@ namespace arc_tools{
 class Clock {
  public:
 
-  Clock() { start(); first_step_ = true;}
-  double getTimestep(){
-  	if(first_step_){
-  		last_time_ = getTime();
-      first_step_ = false;
-  	}
-  	current_time_ = getTime();
-  	time_step_ = current_time_ - last_time_;
-  	last_time_ = getTime();
-  	return time_step_ * kMilisecondsToSeconds;
-  }
-  double getTimeFromStart(){
-  	if(first_step_){
-  		last_time_ = getTime();
-      first_step_ = false;
-  	}
-  	current_time_ = getTime();
-  	time_step_ = current_time_ - last_time_;
-  	return time_step_ * kMilisecondsToSeconds;
-  }
-  void start(){ gettimeofday(&real_time_start_, NULL); }
+  Clock();
+  double getTimestep();
+  double getTimeFromStart();
+  void start();
  private:
   double getTime();
   double getRealTime();

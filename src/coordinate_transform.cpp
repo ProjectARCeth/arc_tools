@@ -92,39 +92,9 @@ Eigen::Matrix3d getRotationMatrix(const Eigen::Vector3d angles){
   double yaw = angles(2);
   //Rotation matrix.
   Eigen::Matrix3d rotation_matrix;
-  /*Eigen::Matrix3d rotation_z_axis;
-  Eigen::Matrix3d rotation_xnew_axis;
-  Eigen::Matrix3d rotation_znewnew_axis;
-  rotation_z_axis<<	cos(alpha),	sin(alpha),		0,
-				-sin(alpha),cos(alpha),		0,
-				0,		0,			1;
-
-  rotation_xnew_axis<<	1,		0,			0,
-				0,		cos(beta),		sin(beta),
-				0,		-sin(beta),		cos(beta);
-
-  rotation_znewnew_axis<<	cos(gamma),	sin(gamma),		0,
-				-sin(gamma),cos(gamma),		0,
-				0,		0,			1;
-
-	rotation_matrix= rotation_znewnew_axis * rotation_xnew_axis * rotation_z_axis;
-*/
-rotation_matrix<<	cos(yaw)*cos(pitch), 	cos(yaw)*sin(pitch)*sin(roll)-sin(yaw)*cos(roll),	cos(yaw)*sin(pitch)*cos(roll)+sin(yaw)*sin(roll) ,
+  rotation_matrix<<	cos(yaw)*cos(pitch), 	cos(yaw)*sin(pitch)*sin(roll)-sin(yaw)*cos(roll),	cos(yaw)*sin(pitch)*cos(roll)+sin(yaw)*sin(roll) ,
 			sin(yaw)*cos(pitch),	sin(yaw)*sin(pitch)*sin(roll)+cos(yaw)*cos(roll),	sin(yaw)*sin(pitch)*cos(roll)-cos(yaw)*sin(roll),
 			-sin(pitch),		cos(pitch)*sin(roll), 						cos(pitch)*cos(roll);
-/* 	
-  Eigen::Matrix3d rotation_matri;
-  rotation_matri(0,0) = cos(beta)*cos(gamma);
-  rotation_matri(0,1) = -cos(beta)*sin(gamma); 
-  rotation_matri(0,2) = sin(beta); 
-  rotation_matri(1,0) = sin(alpha)*sin(beta)*cos(gamma) + cos(alpha)*sin(gamma);
-  rotation_matri(1,1) = -sin(alpha)*sin(beta)*sin(gamma) + cos(alpha)*cos(gamma); 
-  rotation_matri(1,2) = -sin(alpha)*cos(beta); 
-  rotation_matri(2,0) = -cos(alpha)*sin(beta)*cos(gamma) + sin(alpha)*sin(gamma);
-  rotation_matri(2,1) = cos(alpha)*sin(beta)*sin(gamma) + sin(alpha)*cos(gamma); 
-  rotation_matri(2,2) = cos(alpha)*cos(beta);
-  std::cout<<rotation_matri<<std::endl<<std::endl; 
-*/
   return rotation_matrix;
 }
 
@@ -163,6 +133,7 @@ geometry_msgs::Point transformEigenToPointMessage(const Eigen::Vector3d msg){
 
   return point;
 }
+
 Eigen::Vector4d transformQuatMessageToEigen(const geometry_msgs::Quaternion msg){
   Eigen::Vector4d eigen_vector;
   eigen_vector(0) = msg.x;
@@ -172,35 +143,35 @@ Eigen::Vector4d transformQuatMessageToEigen(const geometry_msgs::Quaternion msg)
   return eigen_vector;
 } 
 
-geometry_msgs::Point globalToLocal(const geometry_msgs::Point global_koordinate, arc_msgs::State new_frame_origin)
-{
+geometry_msgs::Quaternion transformEigenToQuatMessage(const Eigen::Vector4d msg){
+  geometry_msgs::Quaternion quat;
+  quat.x = msg(0);
+  quat.y = msg(1);
+  quat.z = msg(2);
+  quat.w = msg(3);
+  return quat;
+}
+
+geometry_msgs::Point globalToLocal(const geometry_msgs::Point global_koordinate, arc_msgs::State new_frame_origin){
   //Translatation
-  std::cout<<"global: "<<global_koordinate.x<<" "<<global_koordinate.y<<std::endl;
   Eigen::Vector3d glob=arc_tools::transformPointMessageToEigen(global_koordinate);
   Eigen::Vector3d stat= arc_tools::transformPointMessageToEigen(new_frame_origin.pose.pose.position);
-//std::cout<<stat(0)<<" "<<stat(1)<<" "<<stat(2)<<std::endl;
   Eigen::Vector3d temp=glob-stat;
-//std::cout<<temp(0)<<" "<<temp(1)<<" "<<temp(2)<<std::endl;
   //Rotation
   Eigen::Vector4d quat=transformQuatMessageToEigen(new_frame_origin.pose.pose.orientation);
   Eigen::Vector3d euler=transformEulerQuaternionVector(quat);
   Eigen::Matrix3d R=getRotationMatrix(euler);
   Eigen::Matrix3d T=R.transpose();
-//std::cout<<R(0,0)<<" "<<R(0,1)<<" "<<R(0,2)<<std::endl<<" "<<R(1,0)<<" "<<R(1,1)<<" "<<R(1,2)<<std::endl<<" "<<R(2,0)<<" "<<R(2,1)<<" "<<R(2,2)<<std::endl;
-  std::cout<<"state: "<<new_frame_origin.pose.pose.position.x<<" "<<new_frame_origin.pose.pose.position.y<<" "<<euler(2)<<std::endl; 
   Eigen::Vector3d local=T*temp;
-//std::cout<<local(0)<<" "<<local(1)<<" "<<local(2)<<std::endl;
   geometry_msgs::Point local_msg=transformEigenToPointMessage(local);
-  std::cout<<"local: "<<local_msg.x<<" "<<local_msg.y<<" "<<std::endl;
   geometry_msgs::Point local_msg_new_axes;
   local_msg_new_axes.x=-local_msg.y;
   local_msg_new_axes.y=local_msg.x;
   local_msg_new_axes.z=local_msg.z;
-  return local_msg;
+  return local_msg_new_axes;
 }
 
-arc_msgs::State generate2DState(const float x, const float y, const float alpha )
-{
+arc_msgs::State generate2DState(const float x, const float y, const float alpha ){
   arc_msgs::State state;
   state.pose.pose.position.x=x;
   state.pose.pose.position.y=y;
@@ -212,6 +183,41 @@ arc_msgs::State generate2DState(const float x, const float y, const float alpha 
   quat=arc_tools::transformQuaternionEulerMsg(eu);
   state.pose.pose.orientation=quat;
   return state;
+}
 
+//Hamiltion quaternion multiplication. (x,y,z,w)
+Eigen::Vector4d multQuaternion(Eigen::Vector4d q1,Eigen::Vector4d q2){
+  Eigen::Vector3d axes1(q1(0), q1(1), q1(2));
+  Eigen::Vector3d axes2(q2(0), q2(1), q2(2));
+  //Hamiltonian product to get new quaternion.
+  Eigen::Vector4d new_quat;
+  new_quat(3) = q1(3)*q2(3) + axes1.dot(axes2);
+  Eigen::Vector3d new_axes = q1(3)*axes2 + q2(3)*axes1 + axes1.cross(axes2);
+  new_quat(0) = new_axes(0);
+  new_quat(1) = new_axes(1);
+  new_quat(2) = new_axes(2);
+  new_quat = new_quat/new_quat.norm();
+  return new_quat;
+}
+
+//Inverse Quaternion (iff unit quaternion!). (x,y,z,w)
+Eigen::Vector4d inverseQuaternion(Eigen::Vector4d quat){
+  Eigen::Vector4d inverse_quat;
+  inverse_quat(0) = -quat(0);
+  inverse_quat(1) = -quat(1);
+  inverse_quat(2) = -quat(2);
+  inverse_quat(3) = quat(3);
+  return inverse_quat;
+}
+
+//Get rotation quat between to quats.
+Eigen::Vector4d diffQuaternion(Eigen::Vector4d base_quat, Eigen::Vector4d target_quat){
+  //Normalization.
+  base_quat = base_quat/base_quat.norm();
+  target_quat = target_quat/target_quat.norm();
+  //Getting difference of unit quaternion.
+  Eigen::Vector4d diff_quat = multQuaternion(base_quat, inverseQuaternion(target_quat));
+  diff_quat.normalize();
+  return diff_quat;
 }
 }//namespace arc_tools.
