@@ -10,6 +10,7 @@ find_package(catkin_simple 0.1.0 REQUIRED COMPONENTS
     std_msgs
     eigen_catkin
     catkin_simple REQUIRED
+    tf
 )
 
 catkin_simple(ALL_DEPS_REQUIRED)
@@ -17,6 +18,7 @@ catkin_simple(ALL_DEPS_REQUIRED)
 cs_add_library(${PROJECT_NAME} 
     src/coordinate_transform.cpp
     src/timing.cpp
+    src/tf_kit.cpp
 )
 
 cs_install()

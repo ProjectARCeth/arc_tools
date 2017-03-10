@@ -17,13 +17,16 @@
 	<build_depend>message_generation</build_depend>
 	<build_depend>catkin_simple</build_depend>
 	<build_depend>eigen_catkin</build_depend>
+	<build_depend>tf</build_depend>
 
   	<run_depend>roscpp</run_depend>
   	<run_depend>std_msgs</run_depend>
 	<run_depend>geometry_msgs</run_depend>
 	<run_depend>sensor_msgs</run_depend>
+	<run_depend>nav_msgs</run_depend>
 	<run_depend>message_generation</run_depend>
 	<run_depend>catkin_simple</run_depend>
 	<run_depend>eigen_catkin</run_depend>
+	<run_depend>tf</run_depend>
 	
 </package>
