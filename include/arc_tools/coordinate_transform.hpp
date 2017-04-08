@@ -27,11 +27,14 @@ geometry_msgs::Point transformEigenToPointMessage(const Eigen::Vector3d msg);
 geometry_msgs::Quaternion transformEigenToQuatMessage(const Eigen::Vector4d msg);
 
 geometry_msgs::Point globalToLocal(geometry_msgs::Point global_koordinate,arc_msgs::State new_frame_origin);
+geometry_msgs::Point rotationLocalToGlobal(geometry_msgs::Point local_koordinate,arc_msgs::State frame);
 arc_msgs::State generate2DState(const float x, const float y, const float alpha );
 
 Eigen::Vector4d multQuaternion(Eigen::Vector4d q1,Eigen::Vector4d q2);
 Eigen::Vector4d inverseQuaternion(Eigen::Vector4d quat);
 Eigen::Vector4d diffQuaternion(Eigen::Vector4d base_quat, Eigen::Vector4d target_quat);
+
+geometry_msgs::Point addPoints(geometry_msgs::Point point_1, geometry_msgs::Point point_2);
 }//namespace arc_tools.
 
 #endif

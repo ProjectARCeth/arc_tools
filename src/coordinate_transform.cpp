@@ -171,6 +171,16 @@ geometry_msgs::Point globalToLocal(const geometry_msgs::Point global_koordinate,
   return local_msg_new_axes;
 }
 
+geometry_msgs::Point rotationLocalToGlobal(geometry_msgs::Point local_koordinate,arc_msgs::State frame){
+  Eigen::Vector3d local = arc_tools::transformPointMessageToEigen(local_koordinate);
+  Eigen::Vector4d quat=transformQuatMessageToEigen(frame.pose.pose.orientation);
+  Eigen::Vector3d euler=transformEulerQuaternionVector(quat);
+  Eigen::Matrix3d R=getRotationMatrix(euler);
+  Eigen::Vector3d global = R*local;
+  geometry_msgs::Point global_point = transformEigenToPointMessage(global);
+  return global_point;
+}
+
 arc_msgs::State generate2DState(const float x, const float y, const float alpha ){
   arc_msgs::State state;
   state.pose.pose.position.x=x;
@@ -219,5 +229,13 @@ Eigen::Vector4d diffQuaternion(Eigen::Vector4d base_quat, Eigen::Vector4d target
   Eigen::Vector4d diff_quat = multQuaternion(base_quat, inverseQuaternion(target_quat));
   diff_quat.normalize();
   return diff_quat;
+}
+
+geometry_msgs::Point addPoints(geometry_msgs::Point point_1, geometry_msgs::Point point_2){
+  geometry_msgs::Point point;
+  point.x = point_1.x + point_2.x;
+  point.y = point_1.y + point_2.y;
+  point.z = point_1.z + point_2.z;
+  return point;
 }
 }//namespace arc_tools.
