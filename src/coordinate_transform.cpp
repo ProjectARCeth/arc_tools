@@ -125,6 +125,13 @@ Eigen::Vector3d transformPointMessageToEigen(const geometry_msgs::Point msg){
   return eigen_vector;
 }
 
+Eigen::Vector2d transformPointMessageToEigenTwoD(const geometry_msgs::Point msg){
+  Eigen::Vector2d eigen_vector;
+  eigen_vector(0) = msg.x;
+  eigen_vector(1) = msg.y;
+  return eigen_vector;
+}
+
 geometry_msgs::Point transformEigenToPointMessage(const Eigen::Vector3d msg){
   geometry_msgs::Point point;
   point.x=msg(0);
