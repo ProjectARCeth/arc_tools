@@ -5,8 +5,8 @@ namespace arc_tools {
 geometry_msgs::Quaternion transformQuaternionEulerMsg(const geometry_msgs::Vector3 euler){
   geometry_msgs::Quaternion quat;
   //Transformation.
-  float roll = euler.x;
-  float pitch = euler.y;
+  float roll = euler.y;
+  float pitch = -euler.x;
   float yaw = euler.z; 
   double t0 = cos(yaw * 0.5f);
   double t1 = sin(yaw * 0.5f);
@@ -161,11 +161,22 @@ geometry_msgs::Point globalToLocal(const geometry_msgs::Point global_koordinate,
   Eigen::Vector4d quat=transformQuatMessageToEigen(new_frame_origin.pose.pose.orientation);
   Eigen::Vector3d euler=transformEulerQuaternionVector(quat);
   Eigen::Matrix3d R=getRotationMatrix(euler);
-  Eigen::Matrix3d T=R.transpose();
+  Eigen::Matrix3d T;
+  double a=quat(3);
+  double b=quat(0);
+  double c=quat(1);
+  double d=quat(2);
+
+  R<<(1-2*(c*c + d*d)), 2*(b*c - a*d), 2*(b*d + a*c), 
+    2*(b*c + a*d), (1-2*(d*d + b*b)), 2*(c*d - a*b), 
+    2*(b*d - a*c), 2*(c*d + a*b), (1-2*(b*b + c*c));
+  T=R.transpose();
+
+  //R.transpose();
   Eigen::Vector3d local=T*temp;
   geometry_msgs::Point local_msg=transformEigenToPointMessage(local);
   geometry_msgs::Point local_msg_new_axes;
-  local_msg_new_axes.x=-local_msg.y;
+  local_msg_new_axes.x=local_msg.-y;
   local_msg_new_axes.y=local_msg.x;
   local_msg_new_axes.z=local_msg.z;
   return local_msg_new_axes;
@@ -176,6 +187,16 @@ geometry_msgs::Point rotationLocalToGlobal(geometry_msgs::Point local_koordinate
   Eigen::Vector4d quat=transformQuatMessageToEigen(frame.pose.pose.orientation);
   Eigen::Vector3d euler=transformEulerQuaternionVector(quat);
   Eigen::Matrix3d R=getRotationMatrix(euler);
+  Eigen::Matrix3d T;
+  double a=quat(3);
+  double b=quat(0);
+  double c=quat(1);
+  double d=quat(2);
+
+  R<<(1-2*(c*c + d*d)), 2*(b*c - a*d), 2*(b*d + a*c), 
+    2*(b*c + a*d), (1-2*(d*d + b*b)), 2*(c*d - a*b), 
+    2*(b*d - a*c), 2*(c*d + a*b), (1-2*(b*b + c*c));
+  T=R;
   Eigen::Vector3d global = R*local;
   geometry_msgs::Point global_point = transformEigenToPointMessage(global);
   return global_point;
