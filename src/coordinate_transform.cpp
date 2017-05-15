@@ -176,7 +176,7 @@ geometry_msgs::Point globalToLocal(const geometry_msgs::Point global_koordinate,
   Eigen::Vector3d local=T*temp;
   geometry_msgs::Point local_msg=transformEigenToPointMessage(local);
   geometry_msgs::Point local_msg_new_axes;
-  local_msg_new_axes.x=local_msg.-y;
+  local_msg_new_axes.x=-local_msg.y;
   local_msg_new_axes.y=local_msg.x;
   local_msg_new_axes.z=local_msg.z;
   return local_msg_new_axes;
