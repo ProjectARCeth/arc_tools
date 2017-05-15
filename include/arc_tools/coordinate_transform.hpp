@@ -16,6 +16,7 @@ geometry_msgs::Quaternion transformQuaternionEulerMsg(const geometry_msgs::Vecto
 Eigen::Vector4d transformQuaternionEulerVector(const Eigen::Vector3d euler);
 geometry_msgs::Vector3 transformEulerQuaternionMsg(const Eigen::Vector4d quat);
 Eigen::Vector3d transformEulerQuaternionVector(const Eigen::Vector4d quat);
+Eigen::Vector3d YPRFromQuaternion(const geometry_msgs::Quaternion quat);
 
 Eigen::Matrix3d getRotationMatrix(const Eigen::Vector3d angles);
 Eigen::Matrix3d getAngularVelocityTransformationMatrix(const Eigen::Vector3d angles);

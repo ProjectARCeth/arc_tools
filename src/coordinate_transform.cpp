@@ -40,6 +40,16 @@ Eigen::Vector4d transformQuaternionEulerVector(const Eigen::Vector3d euler){
   return quat;
 }
 
+Eigen::Vector3d YPRFromQuaternion(const geometry_msgs::Quaternion quat){
+	//euler(0)=yaw	euler(1)=pitch	euler(2)=roll
+	Eigen::Vector3d euler;
+	euler(0)=atan2(2*(quat.w*quat.z+quat.x*quat.y),(1-2*(quat.y*quat.y+quat.z*quat.z)));
+	if(2*(quat.w*quat.y-quat.x*quat.z)<-1) euler(1)=-M_PI/2;
+	if(2*(quat.w*quat.y-quat.x*quat.z)>1) euler(1)=M_PI/2;
+	else euler(1)=asin(2*(quat.w*quat.y-quat.x*quat.z));
+	euler(2)=atan2(2*(quat.w*quat.x+quat.y*quat.z),(1-2*(quat.x*quat.x+quat.y*quat.y)));
+	return euler;
+}
 geometry_msgs::Vector3 transformEulerQuaternionMsg(const Eigen::Vector4d quat){
   geometry_msgs::Vector3 euler;
   //Transformation.
@@ -176,7 +186,7 @@ geometry_msgs::Point globalToLocal(const geometry_msgs::Point global_koordinate,
   Eigen::Vector3d local=T*temp;
   geometry_msgs::Point local_msg=transformEigenToPointMessage(local);
   geometry_msgs::Point local_msg_new_axes;
-  local_msg_new_axes.x=local_msg.-y;
+  local_msg_new_axes.x=-local_msg.y;
   local_msg_new_axes.y=local_msg.x;
   local_msg_new_axes.z=local_msg.z;
   return local_msg_new_axes;
