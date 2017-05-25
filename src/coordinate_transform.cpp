@@ -21,6 +21,25 @@ geometry_msgs::Quaternion transformQuaternionEulerMsg(const geometry_msgs::Vecto
   return quat;
 }
 
+geometry_msgs::Quaternion eulerToQuaternion(const geometry_msgs::Vector3 euler){
+  geometry_msgs::Quaternion quat;
+  //Transformation.
+  float yaw = euler.x;
+  float pitch = euler.y;
+  float roll = euler.z; 
+  double t0 = cos(yaw * 0.5f);
+  double t1 = sin(yaw * 0.5f);
+  double t2 = cos(pitch * 0.5f);
+  double t3 = sin(pitch * 0.5f);
+  double t4 = cos(roll * 0.5f);
+  double t5 = sin(roll * 0.5f);
+  quat.w = t4 * t2 * t0 + t5 * t3 * t1;
+  quat.x = t5 * t2 * t0 - t4 * t3 * t1;	//t0 * t3 * t4 - t1 * t2 * t5;
+  quat.y = t4 * t3 * t0 + t5 * t2 * t1;
+  quat.z = t4 * t2 * t1 - t5 * t3 * t0;
+  return quat;
+}
+
 Eigen::Vector4d transformQuaternionEulerVector(const Eigen::Vector3d euler){
   Eigen::Vector4d quat;
   //Transformation.
@@ -212,16 +231,16 @@ geometry_msgs::Point rotationLocalToGlobal(geometry_msgs::Point local_koordinate
   return global_point;
 }
 
-arc_msgs::State generate2DState(const float x, const float y, const float alpha ){
+arc_msgs::State generate2DState(const geometry_msgs::Pose2D pose){
   arc_msgs::State state;
-  state.pose.pose.position.x=x;
-  state.pose.pose.position.y=y;
-  geometry_msgs::Vector3 eu;
-  eu.x=0;
-  eu.y=0;
-  eu.z=alpha;
+  state.pose.pose.position.x=pose.x;
+  state.pose.pose.position.y=pose.y;
+  geometry_msgs::Vector3 euler;
+  euler.x=pose.theta;
+  euler.y=0;
+  euler.z=0;
   geometry_msgs::Quaternion quat;
-  quat=arc_tools::transformQuaternionEulerMsg(eu);
+  quat=arc_tools::eulerToQuaternion(euler);
   state.pose.pose.orientation=quat;
   return state;
 }

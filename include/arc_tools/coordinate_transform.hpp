@@ -8,11 +8,13 @@
 #include "geometry_msgs/Point.h"
 #include "geometry_msgs/Quaternion.h"
 #include "geometry_msgs/Vector3.h"
+#include "geometry_msgs/Pose2D.h"
 #include "arc_msgs/State.h"
 
 namespace arc_tools {
 
 geometry_msgs::Quaternion transformQuaternionEulerMsg(const geometry_msgs::Vector3 euler);
+geometry_msgs::Quaternion eulerToQuaternion(const geometry_msgs::Vector3 euler);
 Eigen::Vector4d transformQuaternionEulerVector(const Eigen::Vector3d euler);
 geometry_msgs::Vector3 transformEulerQuaternionMsg(const Eigen::Vector4d quat);
 Eigen::Vector3d transformEulerQuaternionVector(const Eigen::Vector4d quat);
@@ -29,7 +31,7 @@ geometry_msgs::Quaternion transformEigenToQuatMessage(const Eigen::Vector4d msg)
 
 geometry_msgs::Point globalToLocal(geometry_msgs::Point global_koordinate,arc_msgs::State new_frame_origin);
 geometry_msgs::Point rotationLocalToGlobal(geometry_msgs::Point local_koordinate,arc_msgs::State frame);
-arc_msgs::State generate2DState(const float x, const float y, const float alpha );
+arc_msgs::State generate2DState(const geometry_msgs::Pose2D pose );
 
 Eigen::Vector4d multQuaternion(Eigen::Vector4d q1,Eigen::Vector4d q2);
 Eigen::Vector4d inverseQuaternion(Eigen::Vector4d quat);
